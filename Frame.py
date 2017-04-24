@@ -4,10 +4,10 @@ from numpy import *
 #TODO: Decide to save or get rid of: path and original caption
 class Frame:
 	
-	#data_coco = True means use coco dataset otherwise use Flickr
-	def __init__(self, frame_path, new_rows=202/5, new_cols=81/5, data_coco=True, sentence_size=None, caption_text=None):
+	#is_data_coco = True means use coco dataset otherwise use Flickr
+	def __init__(self, frame_path, new_rows=640/10, new_cols=426/10, is_data_coco=True, sentence_size=None, caption_text=None):
 		self.frame_path = frame_path
-		self.data_coco = data_coco
+		self.is_data_coco = is_data_coco
 
 		self.img = None
 		self.id = None
@@ -25,7 +25,7 @@ class Frame:
 		frame_name = splited_path[-1]
 		frame_name = frame_name.split('.')[0]
 
-		if self.data_coco:
+		if self.is_data_coco:
 			self.id = self.parse_coco_frame_name(frame_name)
 		else:
 			self.id = self.parse_flickr_frame_name(frame_name)
@@ -69,7 +69,7 @@ class Frame:
 		self.caption_text = caption_text
 		#TODO: create camption_emb which ios a numpy array
 
-	def bag_of_words_embeding():
+	#def bag_of_words_embeding():
 
 	def get_caption_embeding(self):
 		return self.caption_emb
