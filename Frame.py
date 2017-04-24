@@ -5,13 +5,13 @@ from numpy import *
 class Frame:
 	
 	#is_data_coco = True means use coco dataset otherwise use Flickr
-	def __init__(self, frame_path, new_rows=640/10, new_cols=426/10, is_data_coco=True, sentence_size=None, caption_text=None):
+	def __init__(self, frame_path, new_rows=640/6, new_cols=426/6, is_data_coco=True, sentence_size=None, captions_text=None):
 		self.frame_path = frame_path
 		self.is_data_coco = is_data_coco
 
 		self.img = None
 		self.id = None
-		self.caption_text = caption_text
+		self.captions_text = captions_text
 		self.caption_emb = None
 
 		self.parse_path_data(frame_path)
@@ -63,10 +63,10 @@ class Frame:
 		return self.img
 
 	def get_caption_text(self):
-		return self.caption_text
+		return self.captions_text
 
-	def set_caption_text(self, caption_text):
-		self.caption_text = caption_text
+	def set_captions_text(self, captions_text):
+		self.captions_text = captions_text
 		#TODO: create camption_emb which ios a numpy array
 
 	#def bag_of_words_embeding():
@@ -81,5 +81,11 @@ class Frame:
 
 	def resize_frame(self, new_rows, new_cols):
 		#rows, cols, chans = self.img.shape
-		self.img = cv2.resize(self.img, (new_cols, new_rows)) 
+		self.img = cv2.resize(self.img, (new_cols, new_rows))
+
+	def show(self):
+		print self.captions_text
+		cv2.imshow(str(self.id),self.img)
+		cv2.waitKey(0)
+		cv2.destroyAllWindows() 
 		
