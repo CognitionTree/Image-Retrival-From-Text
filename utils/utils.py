@@ -32,13 +32,20 @@ def get_word2vec_model(sentences_path = 'sentences.txt', min_count = 1, size_of_
 def get_sentence_encoding(sentence, model_path = model_path_save, sentence_size = 50):
 	model = gensim.models.Word2Vec.load(model_path)
 	sentence = ' '.join(tokenize_one_sentence(sentence))
+	print "++++++++++++++++++++++++++++++++"	
+	print "sentence: ", sentence
 	sentence_emb = model[sentence.split()]
 	n_words = len(sentence_emb)
+	print "n_words ", n_words
 	embedding_size = len(sentence_emb[0])
+	print "embedding_size ", embedding_size
 	
 	padding_size = sentence_size - n_words
-	padding = zeros((padding_size, embedding_size))
-	padded_sentence = append(padding, sentence_emb, axis=0)
+	
+	padded_sentence = sentence_emb
+	if padding_size != 0:
+		padding = zeros((padding_size, embedding_size))
+		padded_sentence = append(padding, sentence_emb, axis=0)	
 	
 	return padded_sentence
 

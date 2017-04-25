@@ -16,7 +16,7 @@ class Dataset(object):
 
 	FLICKR_PATH = '/home/andy/Datasets/Flickr'
 		
-	def __init__(self, numb_samples=200, perc_train=0.8, is_data_coco=True):
+	def __init__(self, numb_samples=10, perc_train=0.8, is_data_coco=True):
 		self.is_data_coco = is_data_coco
 		self.frames = []		
 		self.numb_samples = numb_samples		
@@ -81,8 +81,9 @@ class Dataset(object):
 
 	def load_coco_captions(self):
 		#Set the text
-		print 'Loading Captions: '
+		print 'Loading Validation Captions: '
 		val_caption_path = self.COCO_PATH + self.COCO_CAPTION_VAL
+		print 'Loading Training Captions: '
 		train_caption_path = self.COCO_PATH + self.COCO_CAPTION_TRAIN
 		
 		val_captions = self.read_json_file_captions(val_caption_path)
@@ -93,11 +94,14 @@ class Dataset(object):
 
 	def map_caption_to_frame(self, captions):
 		#print captions.keys()
-		for frame in self.frames:
+		
+		for i in range(len(self.frames)):
+			frame = self.frames[i]
 			if frame.get_id() in captions: 
 				str_captions = captions[frame.get_id()]
 				frame.set_captions_text(str_captions)
-				
+			
+			self.print_perc(i, len(self.frames), 5)	
 
 	def read_json_file_captions(self, caption_path):
 		with open(caption_path) as data_file:
@@ -194,10 +198,10 @@ class Dataset(object):
 	
 		if is_training:
 			#print 'Create pairs out of the training dataset'
-			I,T,y = create_pairs(self.train_frames)
+			I,T,y = self.create_pairs(self.train_frames)
 		else:
 			#print 'Create pairs out of the testing dataset'
-			I,T,y = create_pairs(self.test_frames)
+			I,T,y = self.create_pairs(self.test_frames)
 		
 		return I,T,y 
 
@@ -222,9 +226,10 @@ class Dataset(object):
 				frame2 = frames[random.randint(0,len(frames))]
 				id2 = frame2.get_id()
 				captions_embs2 = frame2.get_captions_embeding()
+				captions_embs2 = captions_embs2[random.randint(0,len(captions_embs2))]
 				img2 = frame2.get_image()
 
-				if id1 != id2:
+				if id != id2:
 					I.append(img2)
 					T.append(captions_embs2)
 					y.append(0)

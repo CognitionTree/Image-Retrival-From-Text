@@ -1,7 +1,6 @@
 import cv2
 from numpy import *
 import sys
-sys.path.insert(0, 'utils')
 from utils import *
 
 #TODO: Decide to save or get rid of: path and original caption
@@ -73,7 +72,7 @@ class Frame:
 
 	def set_captions_text(self, captions_text):
 		self.captions_text = captions_text
-		self.set_captions_embseding()
+		self.set_captions_embeding()
 		#TODO: create camption_emb which ios a numpy array
 
 	#def bag_of_words_embeding():
