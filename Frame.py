@@ -15,7 +15,7 @@ class Frame:
 		self.img = None
 		self.id = None
 		self.captions_text = captions_text
-		self.caption_emb = []
+		self.captions_embs = []
 
 		self.parse_path_data(frame_path)
 		self.resize_frame(new_rows, new_cols)
@@ -73,21 +73,21 @@ class Frame:
 
 	def set_captions_text(self, captions_text):
 		self.captions_text = captions_text
-		self.set_caption_embeding()
+		self.set_captions_embseding()
 		#TODO: create camption_emb which ios a numpy array
 
 	#def bag_of_words_embeding():
 
-	def get_caption_embeding(self):
-		return self.caption_emb
+	def get_captions_embeding(self):
+		return self.captions_embs
 
 	#It assumes that set_captions_text was already called
-	def set_caption_embeding(self, multi_word=True):
+	def set_captions_embeding(self, multi_word=True):
 		#TODO: Implement this
 		if multi_word:
 			for sentence in self.captions_text:
 				emb = get_sentence_encoding(sentence)	
-				self.caption_emb.append(emb)
+				self.captions_embs.append(emb)
 		 
 		
 

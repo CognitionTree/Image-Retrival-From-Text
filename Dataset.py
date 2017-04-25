@@ -189,5 +189,45 @@ class Dataset(object):
 		var_img -= avg_img**2
 		return var_img
 
-
+	def load_pairs(self, is_training=True):
+		I,T,y = None, None, None		
 	
+		if is_training:
+			#print 'Create pairs out of the training dataset'
+			I,T,y = create_pairs(self.train_frames)
+		else:
+			#print 'Create pairs out of the testing dataset'
+			I,T,y = create_pairs(self.test_frames)
+		
+		return I,T,y 
+
+	def create_pairs(self, frames, nub_neg_frames=8):
+		I = []
+		T = []
+		y = []
+		
+		for frame in frames:
+			id = frame.get_id()
+			captions_embs = frame.get_captions_embeding()
+			img = frame.get_image()
+
+			for cap_emb in captions_embs:
+				y.append(1)
+				I.append(img)
+				T.append(cap_emb)
+			
+			#For negative pairs
+			neg_pairs_count = 0
+			while neg_pairs_count < nub_neg_frames:
+				frame2 = frames[random.randint(0,len(frames))]
+				id2 = frame2.get_id()
+				captions_embs2 = frame2.get_captions_embeding()
+				img2 = frame2.get_image()
+
+				if id1 != id2:
+					I.append(img2)
+					T.append(captions_embs2)
+					y.append(0)
+					neg_pairs_count+=1
+
+		return array(I), array(T), array(y)
