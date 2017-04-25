@@ -11,7 +11,8 @@ n_workers = 1
 
 
 #testing getting saved model:
-new_model = gensim.models.Word2Vec.load('trained_models/word2vec_model')
+model_path = '/Users/danielaflorit/Github/Image-Retrival-From-Text/trained_models/word2vec_model'
+new_model = gensim.models.Word2Vec.load(model_path)
 #print new_model['first']
 sentence = "first second"
 sentence_size = 5
