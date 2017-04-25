@@ -1,22 +1,11 @@
-from train_word2vec import *
-
-#playing with parameters for get_word2vec_model
-all_sentences = [['first', 'sentence'], ['second', 'sentence']]
-min_count = 1
-size_of_layers = 5
-n_workers = 1
-
-#testing get_word2vec_model
-#get_word2vec_model('sentences.txt', min_count, size_of_layers, n_workers)
-
+from utils import *
 
 #testing getting saved model:
-model_path = '/Users/danielaflorit/Github/Image-Retrival-From-Text/trained_models/word2vec_model'
-new_model = gensim.models.Word2Vec.load(model_path)
-#print new_model['first']
-sentence = "first second"
-sentence_size = 5
+model_path_save = '/Users/andymartinez/git/Image-Retrival-From-Text/trained_models/word2vec_model_100'
+sentence = "a vandalized stop sign and a red beetle on the road"
+sentence_size = 15
+new_model = gensim.models.Word2Vec.load(model_path_save)
 padded_sentence = get_sentence_encoding(new_model, sentence, sentence_size)
-
 print padded_sentence
+
 print "everything good so far"
