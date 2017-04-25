@@ -62,11 +62,15 @@ class Frame:
 	def get_image(self):
 		return self.img
 
+	def set_image(self, img):
+		self.img = img
+
 	def get_caption_text(self):
 		return self.captions_text
 
 	def set_captions_text(self, captions_text):
 		self.captions_text = captions_text
+		self.set_caption_embeding()
 		#TODO: create camption_emb which ios a numpy array
 
 	#def bag_of_words_embeding():
@@ -74,8 +78,9 @@ class Frame:
 	def get_caption_embeding(self):
 		return self.caption_emb
 
-	def set_caption_embeding(self, caption_emb):
-		self.caption_emb = caption_emb 
+	#It assumes that set_captions_text was already called
+	def set_caption_embeding(self, multi_word=True):
+		#TODO: Implement this 
 		
 
 
