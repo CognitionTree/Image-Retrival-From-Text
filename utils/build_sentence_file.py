@@ -11,12 +11,15 @@ def parse_json_file(file_path):
 	return sentences
 
 def write_sentence_file(sentence_array, sentences_path):
-	file = open(sentences_path, 'w')
-	for sentence in sentence_array:
-		sentence = ' '.join(sentence) + '\n'
-		file.write(sentence)
-	file.close()
-		
+    file = open(sentences_path, 'w')
+    max_len = 0
+    for sentence in sentence_array:
+        if len(sentence) > max_len:
+            max_len = len(sentence)
+        sentence = ' '.join(sentence) + '\n'
+        file.write(sentence)
+    file.close()
+	print "max length is ", max_len
 	
 
 #-----Main----
