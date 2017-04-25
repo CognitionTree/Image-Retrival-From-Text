@@ -1,5 +1,8 @@
 import cv2
 from numpy import *
+import sys
+sys.path.insert(0, 'utils')
+from utils import *
 
 #TODO: Decide to save or get rid of: path and original caption
 class Frame:
@@ -12,7 +15,7 @@ class Frame:
 		self.img = None
 		self.id = None
 		self.captions_text = captions_text
-		self.caption_emb = None
+		self.caption_emb = []
 
 		self.parse_path_data(frame_path)
 		self.resize_frame(new_rows, new_cols)
@@ -80,7 +83,12 @@ class Frame:
 
 	#It assumes that set_captions_text was already called
 	def set_caption_embeding(self, multi_word=True):
-		#TODO: Implement this 
+		#TODO: Implement this
+		if multi_word:
+			for sentence in self.captions_text:
+				emb = get_sentence_encoding(sentence)	
+				self.caption_emb.append(emb)
+		 
 		
 
 
