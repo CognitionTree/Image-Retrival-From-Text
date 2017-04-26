@@ -7,14 +7,16 @@ from utils import *
 class Frame:
 	
 	#is_data_coco = True means use coco dataset otherwise use Flickr
-	def __init__(self, frame_path, new_rows=640/6, new_cols=426/6, is_data_coco=True, sentence_size=None, captions_text=None):
+	def __init__(self, frame_path, new_rows=640/6, new_cols=426/6, is_data_coco=True, sentence_size=None, captions_text=None, load_emb = False):
 		self.frame_path = frame_path
 		self.is_data_coco = is_data_coco
-
+		self.load_emb = load_emb #If True, load caption embeddings, otherwise, compute them
+		
 		self.img = None
 		self.id = None
 		self.captions_text = captions_text
 		self.captions_embs = []
+		self.caption_ids = []
 
 		self.parse_path_data(frame_path)
 		self.resize_frame(new_rows, new_cols)
@@ -36,7 +38,6 @@ class Frame:
 		frame_name = frame_name.split('_')[-1]
 		return int(frame_name)
 		
-
 	def parse_flickr_frame_name(self, frame_name):
 		return int(frame_name)
 	
@@ -71,26 +72,39 @@ class Frame:
 		return self.captions_text
 
 	def set_captions_text(self, captions_text):
-		self.captions_text = captions_text
-		self.set_captions_embeding()
 		#TODO: create camption_emb which ios a numpy array
-
+		self.captions_text = captions_text
+		if self.load_emb == True:
+			self.read_captions_embeding()
+		else:
+			self.compute_captions_embeding()
+		
 	#def bag_of_words_embeding():
 
 	def get_captions_embeding(self):
 		return self.captions_embs
 
 	#It assumes that set_captions_text was already called
-	def set_captions_embeding(self, multi_word=True):
+	def compute_captions_embeding(self, multi_word=True):
 		#TODO: Implement this
 		if multi_word:
 			for sentence in self.captions_text:
-				emb = get_sentence_encoding(sentence)	
+				emb = get_sentence_encoding(sentence)			
+				self.captions_embs.append(emb)
+	
+	def read_captions_embeding(self, multi_word=True):
+		if multi_word:
+			for id in self.caption_ids:
+				file_name = str(self.id) + "_" + str(id) + ".npy"
+				emb = load(file_name)
 				self.captions_embs.append(emb)
 		 
-		
-
-
+	def get_caption_ids(self):
+		return self.caption_ids
+	
+	def set_caption_ids(self, caption_ids):
+		self.caption_ids = caption_ids
+	
 	def resize_frame(self, new_rows, new_cols):
 		#rows, cols, chans = self.img.shape
 		self.img = cv2.resize(self.img, (new_cols, new_rows))

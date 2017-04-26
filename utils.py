@@ -23,12 +23,6 @@ def tokenize_all_sentences(sentences):
 		i += 1
 	return sentence_array
 		
-def get_word2vec_model(sentences_path = 'sentences.txt', min_count = 1, size_of_layers = 100, n_workers = 1):
-	sentences = gensim.models.word2vec.LineSentence(sentences_path)
-	print "training model"
-	word2vec_model = gensim.models.Word2Vec(sentences, min_count = 1, size = size_of_layers, workers = n_workers)
-	word2vec_model.save(model_path_save)
-
 def get_sentence_encoding(sentence, model_path = model_path_save, sentence_size = 50):
 	model = gensim.models.Word2Vec.load(model_path)
 	sentence = ' '.join(tokenize_one_sentence(sentence))
@@ -43,4 +37,3 @@ def get_sentence_encoding(sentence, model_path = model_path_save, sentence_size 
 		padding = zeros((padding_size, embedding_size))
 		padded_sentence = append(padding, sentence_emb, axis=0)
 	return padded_sentence
-

@@ -7,45 +7,35 @@ import random
 from numpy import *
 
 class Dataset(object):
-	COCO_PATH = '/home/andy/Datasets/COCO'
+	COCO_PATH = '/Users/danielaflorit/Github/COCO_Dataset'
 	COCO_TRAIN_PATH = '/train2014'
 	COCO_VAL_PATH = '/val2014'
 	COCO_CAPTION_TRAIN = '/annotations/captions_train2014.json'
 	COCO_CAPTION_VAL = '/annotations/captions_val2014.json'
 
-
-	FLICKR_PATH = '/home/andy/Datasets/Flickr'
-		
-	def __init__(self, numb_samples=10, perc_train=0.8, is_data_coco=True):
-		self.is_data_coco = is_data_coco
+	def __init__(self, numb_samples=10, perc_train=0.8, numb_captions = 5):
 		self.frames = []		
 		self.numb_samples = numb_samples		
 		self.perc_train=perc_train
+		self.numb_captions = numb_captions
 
 		self.train_frames = []
 		self.test_frames = []
-
-		if is_data_coco:
-			self.data_path = self.COCO_PATH
-			self.load_coco_images()
-			self.load_coco_captions()
-		else:
-			self.data_path = self.FLICKR_PATH
-			self.load_flickr_images()
-			self.load_flickr_captions()
-
+		
+		self.data_path = self.COCO_PATH
+		self.load_coco_images()
+		self.load_coco_captions()
 		
 		self.numb_frames = len(self.frames)
 		self.split_data()
-
+			
 		del self.frames
 
 		self.train_avg_img = None
 		self.test_avg_img = None
 		self.train_var_img = None
 		self.test_var_img = None
-		
-	
+			
 	def split_data(self):
 		print 'Splitting Frames:'
 		numb_train_damples = self.perc_train * len(self.frames)
@@ -86,19 +76,22 @@ class Dataset(object):
 		print 'Loading Training Captions: '
 		train_caption_path = self.COCO_PATH + self.COCO_CAPTION_TRAIN
 		
-		val_captions = self.read_json_file_captions(val_caption_path)
-		train_captions = self.read_json_file_captions(train_caption_path)
+		val_captions, val_captions_ids = self.read_json_file_captions(val_caption_path)
+		train_captions, train_captions_ids = self.read_json_file_captions(train_caption_path)
 		
-		self.map_caption_to_frame(val_captions)
-		self.map_caption_to_frame(train_captions)
+		self.map_caption_to_frame(val_captions, val_captions_ids)
+		self.map_caption_to_frame(train_captions, train_captions_ids)
 
-	def map_caption_to_frame(self, captions):
-		#print captions.keys()
+	def map_caption_to_frame(self, captions, captions_ids):
 		
 		for i in range(len(self.frames)):
 			frame = self.frames[i]
-			if frame.get_id() in captions: 
-				str_captions = captions[frame.get_id()]
+			frame_id = frame.get_id()
+			if frame_id in captions:
+				str_captions = captions[frame_id][0:self.numb_captions]
+				int_captions_ids = captions_ids[frame_id][0:self.numb_captions]
+				
+				frame.set_caption_ids(int_captions_ids)
 				frame.set_captions_text(str_captions)
 			
 			self.print_perc(i, len(self.frames), 5)	
@@ -107,23 +100,22 @@ class Dataset(object):
 		with open(caption_path) as data_file:
 			temp_data = json.load(data_file)
 		temp_data = temp_data['annotations']
-		data = {}
+		data_caption = {}
+		data_caption_ids = {}
+		
 		for d in temp_data:
 			img_id = int(d['image_id'])
 			img_caption = str(d['caption'])
+			img_caption_ids = int(d['id'])
 			
-			if img_id in data:
-				data[img_id].append(img_caption)
+			if img_id in data_caption:
+				data_caption[img_id].append(img_caption)
+				data_caption_ids[img_id].append(img_caption_ids)
 			else:
-				data[img_id] = [img_caption]
+				data_caption[img_id] = [img_caption]
+				data_caption_ids[img_id] = [img_caption_ids]
 
-		return data 		
-	
-	def load_flickr_images(self):
-		print 'Implement This'
-
-	def load_flickr_captions(self):
-		print 'Implement this' 
+		return data_caption, data_caption_ids 		
 		
 	def __len__(self):
 		return self.numb_frames
