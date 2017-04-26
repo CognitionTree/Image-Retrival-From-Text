@@ -86,6 +86,7 @@ def compute_accuracy(predictions, labels):
 epochs = 50
 val_split = 0.1
 
+#TODO: Pass parameter for one dimensional sentences embeding
 dataset = Dataset()
 I, T, y = dataset.load_pairs()
 
@@ -133,4 +134,4 @@ print('* Accuracy on training set: %0.2f%%' % (100 * tr_acc))
 #model.save_weights("eucledean_distance_model.h5")
 
 #Saving Model:
-save_keras_mode('distance_lstm', model)
+save_keras_mode('distance_one_d_sentence', model)
