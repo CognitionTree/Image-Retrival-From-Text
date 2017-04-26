@@ -13,7 +13,7 @@ class Dataset(object):
 	COCO_CAPTION_TRAIN = '/annotations/captions_train2014.json'
 	COCO_CAPTION_VAL = '/annotations/captions_val2014.json'
 
-	def __init__(self, numb_samples=10, perc_train=0.8, numb_captions = 5):
+	def __init__(self, numb_samples=100, perc_train=0.8, numb_captions = 5):
 		self.frames = []		
 		self.numb_samples = numb_samples		
 		self.perc_train=perc_train

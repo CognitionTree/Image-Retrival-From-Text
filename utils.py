@@ -1,6 +1,7 @@
 import gensim
 from numpy import *
 from nltk.tokenize import word_tokenize
+from keras.models import model_from_json
 
 model_path_save = 'trained_models/word2vec_model_100'
 
@@ -37,3 +38,10 @@ def get_sentence_encoding(sentence, model_path = model_path_save, sentence_size 
 		padding = zeros((padding_size, embedding_size))
 		padded_sentence = append(padding, sentence_emb, axis=0)
 	return padded_sentence
+	
+def save_keras_mode(name, model):
+	model_json = model.to_json()
+	with open('trained_models/'+ name + '.json', 'w') as json_file:
+		json_file.write(model_json)
+	
+	model.save_weights('trained_models/' + name + ".h5")

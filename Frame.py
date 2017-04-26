@@ -7,7 +7,7 @@ from utils import *
 class Frame:
 	
 	#is_data_coco = True means use coco dataset otherwise use Flickr
-	def __init__(self, frame_path, new_rows=640/6, new_cols=426/6, is_data_coco=True, sentence_size=None, captions_text=None, load_emb = False):
+	def __init__(self, frame_path, new_rows=640/10, new_cols=426/10, is_data_coco=True, sentence_size=None, captions_text=None, load_emb = False):
 		self.frame_path = frame_path
 		self.is_data_coco = is_data_coco
 		self.load_emb = load_emb #If True, load caption embeddings, otherwise, compute them

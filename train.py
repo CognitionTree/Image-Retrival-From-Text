@@ -14,9 +14,11 @@ from keras.utils import plot_model
 from keras import metrics
 from keras import regularizers
 from keras.models import model_from_yaml
+from keras.models import model_from_json
 import os
 
 from Dataset import *
+from utils import *
 
 def euclidean_distance(vects):
     x, y = vects
@@ -49,7 +51,6 @@ def create_base_text_network_lstm(input_shape, input_shape_time_dist):
 	#model.add(TimeDistributed(MaxPooling2D(pool_size=(2, 2))))
 	#model.add(TimeDistributed(Flatten()))
 	#model.add(TimeDistributed(Dense(embedding_size, kernel_regularizer=regularizers.l2(0.005))))
-	
 	#model.add(GlobalAveragePooling1D())
 	
 	
@@ -78,16 +79,11 @@ def create_base_image_network(conv_input_shape):
 def compute_accuracy(predictions, labels):
     '''Compute classification accuracy with a fixed threshold on distances.
     '''
-    return labels[predictions.ravel() < 0.5].mean()
-    
-
-
-
-
-
+    mean = np.mean(predictions, axis=0)
+    return labels[predictions.ravel() < mean].mean()
 
 #main
-epochs = 150
+epochs = 50
 val_split = 0.1
 
 dataset = Dataset()
@@ -105,10 +101,9 @@ else:
 I = I.astype('float32')
 I /= 255  
 
-
 T = T.astype('float32')
 numb_examples, numb_words, word_emb = T.shape
-input_shape_text = (word_emb)
+input_shape_text = (word_emb, )
 input_shape_text_time_distributed = (numb_words, word_emb)
 
 base_image_network = create_base_image_network(input_shape_img)
@@ -136,3 +131,6 @@ tr_acc = compute_accuracy(pred, y)
 print('* Accuracy on training set: %0.2f%%' % (100 * tr_acc))
 
 #model.save_weights("eucledean_distance_model.h5")
+
+#Saving Model:
+save_keras_mode('distance_lstm', model)
