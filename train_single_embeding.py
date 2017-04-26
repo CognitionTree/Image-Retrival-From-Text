@@ -83,11 +83,12 @@ def compute_accuracy(predictions, labels):
     return labels[predictions.ravel() < mean].mean()
 
 #main
-epochs = 50
+epochs = 10
 val_split = 0.1
+multi_word = False
 
 #TODO: Pass parameter for one dimensional sentences embeding
-dataset = Dataset()
+dataset = Dataset(multi_word = multi_word)
 I, T, y = dataset.load_pairs()
 
 numb_examples, rows, cols, channels = I.shape
@@ -114,7 +115,7 @@ base_text_network = create_base_text_network_lstm(input_shape_text)
 #create_base_network(input_shape_conv, input_shape_time_dist)
 
 input_i = Input(shape=input_shape_img)
-input_t = Input(shape=input_shape_text_time_distributed)
+input_t = Input(shape=input_shape_text)
 
 processed_i = base_image_network(input_i)
 processed_t = base_text_network(input_t)

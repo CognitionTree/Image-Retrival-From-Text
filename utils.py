@@ -3,7 +3,9 @@ from numpy import *
 from nltk.tokenize import word_tokenize
 from keras.models import model_from_json
 
+trained_models_dir = 'trained_models/'
 model_path_save = 'trained_models/word2vec_model_100'
+sentence_size = 50
 
 def tokenize_one_sentence(sentence):
 	sentence = word_tokenize(sentence)
@@ -24,7 +26,7 @@ def tokenize_all_sentences(sentences):
 		i += 1
 	return sentence_array
 		
-def get_sentence_encoding(sentence, model_path = model_path_save, sentence_size = 50):
+def get_sentence_encoding(sentence, model_path = model_path_save, sentence_size = sentence_size):
 	model = gensim.models.Word2Vec.load(model_path)
 	sentence = ' '.join(tokenize_one_sentence(sentence))
 	sentence_emb = model[sentence.split()]
@@ -41,7 +43,17 @@ def get_sentence_encoding(sentence, model_path = model_path_save, sentence_size 
 	
 def save_keras_mode(name, model):
 	model_json = model.to_json()
-	with open('trained_models/'+ name + '.json', 'w') as json_file:
+	with open(trained_models_dir+ name + '.json', 'w') as json_file:
 		json_file.write(model_json)
 	
-	model.save_weights('trained_models/' + name + ".h5")
+	model.save_weights(trained_models_dir + name + ".h5")
+
+def time_sum(full_emb):
+	n_words, emb_size = full_emb.shape
+	full_emb /= n_words
+	emb = zeros(emb_size)
+	
+	for i in range(n_words):
+		emb += (i+1)*full_emb[i]
+	
+	return emb

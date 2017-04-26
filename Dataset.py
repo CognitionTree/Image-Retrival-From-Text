@@ -13,11 +13,19 @@ class Dataset(object):
 	COCO_CAPTION_TRAIN = '/annotations/captions_train2014.json'
 	COCO_CAPTION_VAL = '/annotations/captions_val2014.json'
 
-	def __init__(self, numb_samples=100, perc_train=0.8, numb_captions = 5):
+	#default arguments:
+	numb_samples = 10
+	perc_train = 0.8
+	numb_captions = 5
+	multi_word = True
+	
+	def __init__(self, numb_samples=numb_samples, perc_train=perc_train, numb_captions = numb_captions, multi_word = multi_word):
+		print "multi_word is set to ", multi_word
 		self.frames = []		
 		self.numb_samples = numb_samples		
 		self.perc_train=perc_train
 		self.numb_captions = numb_captions
+		self.multi_word = multi_word
 
 		self.train_frames = []
 		self.test_frames = []
@@ -92,7 +100,7 @@ class Dataset(object):
 				int_captions_ids = captions_ids[frame_id][0:self.numb_captions]
 				
 				frame.set_caption_ids(int_captions_ids)
-				frame.set_captions_text(str_captions)
+				frame.set_captions_text(str_captions, self.multi_word)
 			
 			self.print_perc(i, len(self.frames), 5)	
 
