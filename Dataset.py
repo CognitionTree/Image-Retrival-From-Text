@@ -14,7 +14,7 @@ class Dataset(object):
 	COCO_CAPTION_VAL = '/annotations/captions_val2014.json'
 
 	#default arguments:
-	numb_samples = 200#20000
+	numb_samples = 20000
 	perc_train = 0.8
 	numb_captions = 1
 	multi_word = True
