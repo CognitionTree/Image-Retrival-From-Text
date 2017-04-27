@@ -7,16 +7,16 @@ import random
 from numpy import *
 
 class Dataset(object):
-	COCO_PATH = '/Users/danielaflorit/Github/COCO_Dataset'
+	COCO_PATH = '/home/andy/Datasets/COCO'
 	COCO_TRAIN_PATH = '/train2014'
 	COCO_VAL_PATH = '/val2014'
 	COCO_CAPTION_TRAIN = '/annotations/captions_train2014.json'
 	COCO_CAPTION_VAL = '/annotations/captions_val2014.json'
 
 	#default arguments:
-	numb_samples = 10
+	numb_samples = 200#20000
 	perc_train = 0.8
-	numb_captions = 5
+	numb_captions = 1
 	multi_word = True
 	
 	def __init__(self, numb_samples=numb_samples, perc_train=perc_train, numb_captions = numb_captions, multi_word = multi_word):
@@ -205,7 +205,7 @@ class Dataset(object):
 		
 		return I,T,y 
 
-	def create_pairs(self, frames, nub_neg_frames=8):
+	def create_pairs(self, frames, nub_neg_frames=1):
 		I = []
 		T = []
 		y = []

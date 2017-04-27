@@ -5,7 +5,8 @@ from utils import *
 
 #TODO: Decide to save or get rid of: path and original caption
 class Frame:
-	
+	TEXT_ENCODING_PATH = '/home/andy/Datasets/COCO/text_encoding/'	
+
 	#is_data_coco = True means use coco dataset otherwise use Flickr
 	def __init__(self, frame_path, new_rows=640/10, new_cols=426/10, is_data_coco=True, sentence_size=None, captions_text=None, load_emb = True):
 		self.frame_path = frame_path
@@ -88,8 +89,8 @@ class Frame:
 	#It assumes that set_captions_text was already called
 	def compute_captions_embeding(self, multi_word):
 		#TODO: Implement this
-		print "I am computing the embeddings"
-		print "the embedding option is: ", multi_word
+		#print "I am computing the embeddings"
+		#print "the embedding option is: ", multi_word
 		
 		for sentence in self.captions_text:
 			full_emb = get_sentence_encoding(sentence)
@@ -106,13 +107,14 @@ class Frame:
 				print emb
 	
 	def read_captions_embeding(self, multi_word):
-		print "I am reading the embeddings"
-		print "the embedding option is: ", multi_word
+		#print "I am reading the embeddings"
+		#print "the embedding option is: ", multi_word
 		
 		for id in self.caption_ids:
-			file_name = str(self.id) + "_" + str(id) + ".npy"
+			file_name = self.TEXT_ENCODING_PATH + str(self.id) + "_" + str(id) + ".npy"
 			full_emb = load(file_name)
-			
+			full_emb = cv2.resize(full_emb, (100/3, 50/3))			
+
 			if multi_word:
 				self.captions_embs.append(full_emb)
 			else:

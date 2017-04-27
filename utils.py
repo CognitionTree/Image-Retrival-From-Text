@@ -50,7 +50,7 @@ def save_keras_mode(name, model):
 
 def time_sum(full_emb):
 	n_words, emb_size = full_emb.shape
-	full_emb /= n_words
+	full_emb /= (n_words*1.0)
 	emb = zeros(emb_size)
 	
 	for i in range(n_words):
