@@ -97,10 +97,11 @@ def compute_avg_distances(predictions, labels):
 	return same_avg, diff_avg 
 
 #main
-epochs = 120
+epochs = 50
 val_split = 0.1
 
 dataset = Dataset()
+dataset.preprocess_img_train_dataset()
 I, T, y = dataset.load_pairs()
 
 numb_examples, rows, cols, channels = I.shape
@@ -113,7 +114,7 @@ else:
     input_shape_img = (rows, cols, channels)
 
 I = I.astype('float32')
-I /= 255  
+#I /= 255  
 
 T = T.astype('float32')
 numb_examples, numb_words, word_emb = T.shape
@@ -122,8 +123,8 @@ input_shape_text_time_distributed = (numb_words, word_emb)
 
 base_image_network = create_base_image_network(input_shape_img)
 base_text_network = create_base_text_network_lstm(input_shape_text, input_shape_text_time_distributed)
-plot_model(base_image_network, to_file='base_image_network_lstm_avg_final.png', show_shapes=True, show_layer_names=True)
-plot_model(base_text_network, to_file='base_text_network_lstm_avg_final.png', show_shapes=True, show_layer_names=True)
+plot_model(base_image_network, to_file='base_image_network_lstm_avg_prep.png', show_shapes=True, show_layer_names=True)
+plot_model(base_text_network, to_file='base_text_network_lstm_avg_prep.png', show_shapes=True, show_layer_names=True)
 
 #create_base_network(input_shape_conv, input_shape_time_dist)
 
@@ -136,7 +137,7 @@ processed_t = base_text_network(input_t)
 distance = Lambda(euclidean_distance, output_shape=eucl_dist_output_shape)([processed_i, processed_t])
 
 model = Model([input_i, input_t], distance)
-plot_model(model, to_file='full_model_lstm_avg_final.png', show_shapes=True, show_layer_names=True)
+plot_model(model, to_file='full_model_lstm_avg_prep.png', show_shapes=True, show_layer_names=True)
 
 rms = RMSprop()
 model.compile(loss=contrastive_loss, optimizer=rms)
@@ -154,4 +155,4 @@ print('Distance of negative pairs = ', diff_dist)
 print('Difference = ', diff_dist - same_dist)
 
 #Saving Model:
-save_keras_mode('distance_lstm_avg_final', model)
+save_keras_mode('distance_lstm_avg_prep', model)
