@@ -150,18 +150,26 @@ class Dataset(object):
 	def preprocess_img_train_dataset(self):
 		print 'Preprocessing Images Train Set'
 		self.train_avg_img = self.calc_avg_img(self.train_frames)
+		for frame in self.train_frames:
+			frame.set_image(frame.get_image() - self.train_avg_img)		
+
+		self.train_avg_img = self.calc_avg_img(self.train_frames)		
 		self.train_var_img = self.calc_var_img(self.train_frames, self.train_avg_img)
 
 		for frame in self.train_frames:
-			frame.set_image((frame.get_image() - self.train_avg_img)/self.train_var_img)
+			frame.set_image(frame.get_image()/self.train_var_img)
 
 	def preprocess_img_test_dataset(self):
 		print 'Preprocessing Images Test Set'
 		self.test_avg_img = self.calc_avg_img(self.test_frames)
+		for frame in self.test_frames:
+			frame.set_image(frame.get_image() - self.test_avg_img)
+
+		self.test_avg_img = self.calc_avg_img(self.test_frames)
 		self.test_var_img = self.calc_var_img(self.test_frames, self.test_avg_img)
 
 		for frame in self.test_frames:
-			frame.set_image((frame.get_image() - self.train_avg_img)/self.train_var_img)
+			frame.set_image(frame.get_image()/self.test_var_img)
 	
 	def get_test_avg_img(self):
 		return self.test_avg_img
@@ -188,8 +196,9 @@ class Dataset(object):
 		var_img = zeros(frames[0].get_shape())*1.0
 		
 		for frame in frames:
-			var_img += ((frame.get_image())**2)/len(frames)
+			var_img += ((frame.get_image())**2)
 
+		var_img /= len(frames)
 		var_img -= avg_img**2
 		return var_img
 

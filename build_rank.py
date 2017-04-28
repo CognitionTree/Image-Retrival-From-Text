@@ -43,10 +43,10 @@ def compute_avg_distances(predictions, labels):
 	return same_avg, diff_avg
 
 #main ----------------------------------------
-numb_frames = 1000
-numb_ranks = 50
+numb_frames = 500
+numb_ranks = 100
 
-model_name = ['trained_models/distance_lstm'][0]
+model_name = ['trained_models/distance_lstm_avg_cross_final'][0]
 output_name = model_name + '_ranks.mat'
 madel_path = model_name+'.json'
 weights_path = model_name+'.h5'
@@ -69,17 +69,20 @@ dataset = Dataset()
 frames = dataset.get_test_frames()[0:numb_frames]
 ranks = np.zeros(numb_ranks)
 
+h = 0
 for query_frame in frames:
+	print('h = ', h)
+	h+=1
 	caption = query_frame.get_captions_embeding()[0]
-	print('\n==============================================================')
-	print('Query Frame =', query_frame.get_id())
+	#print('\n==============================================================')
+	#print('Query Frame =', query_frame.get_id())
 
 	distances = {}
 	for galery_frame in frames:
 		img = galery_frame.get_image()
 		dist = model.predict([array([img]), array([caption])])[0][0]
-		print('Gallery Frame =', galery_frame.get_id())
-		print('Distance = ', dist)
+		#print('Gallery Frame =', galery_frame.get_id())
+		#print('Distance = ', dist)
 		if dist in distances:
 			distances[dist].append(galery_frame.get_id())
 		else:

@@ -42,7 +42,7 @@ def compute_avg_distances(predictions, labels):
 	return same_avg, diff_avg 
 
 def save_results(is_training=True):
-	model_name = ['trained_models/distance_lstm'][0]
+	model_name = ['trained_models/distance_lstm_avg_cross_final'][0]
 	madel_path = model_name+'.json'
 	weights_path = model_name+'.h5'
 
