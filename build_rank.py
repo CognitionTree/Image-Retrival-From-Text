@@ -46,7 +46,7 @@ def compute_avg_distances(predictions, labels):
 numb_frames = 500
 numb_ranks = 100
 
-model_name = ['trained_models/distance_lstm_avg_cross_final'][0]
+model_name = ['trained_models/distance_lstm_avg_final', 'trained_models/distance_lstm_avg_cross_final', 'trained_models/distance_lstm_max', 'trained_models/distance_lstm_avg', 'trained_models/distance_lstm', 'trained_models/distance_one_d_sentence', 'trained_models/distance_lstm_max_cross_final3'][6]#4 is also running
 output_name = model_name + '_ranks.mat'
 madel_path = model_name+'.json'
 weights_path = model_name+'.h5'
@@ -62,7 +62,7 @@ model.load_weights(weights_path)
 
 rms = RMSprop()
 model.compile(loss=contrastive_loss, optimizer=rms)
-
+#plot_model(model, to_file='MODELLLLLLLLL.png', show_shapes=True, show_layer_names=True)
 
 #Predict Training
 dataset = Dataset()
@@ -79,10 +79,12 @@ for query_frame in frames:
 
 	distances = {}
 	for galery_frame in frames:
+		#galery_frame.show()
 		img = galery_frame.get_image()
-		dist = model.predict([array([img]), array([caption])])[0][0]
+		dist = model.predict([array([img]), array([caption])])[0][0][0]
 		#print('Gallery Frame =', galery_frame.get_id())
 		#print('Distance = ', dist)
+		#print()
 		if dist in distances:
 			distances[dist].append(galery_frame.get_id())
 		else:
@@ -96,6 +98,9 @@ for query_frame in frames:
 		if query_frame.get_id() in distances[keys[i]]:
 			for j in range(i, len(ranks)):
 				ranks[j] += 1
+
+print('Distances:')
+print(distances)
 
 for i in range(len(ranks)):
 	ranks[i] = (ranks[i]*1.0)/numb_frames

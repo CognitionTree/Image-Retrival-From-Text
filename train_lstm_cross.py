@@ -37,7 +37,7 @@ def contrastive_loss(y_true, y_pred):
     return K.mean(y_true * K.square(y_pred) +
                   (1 - y_true) * K.square(K.maximum(margin - y_pred, 0)))
 
-def create_base_text_network_lstm(input_shape, input_shape_time_dist, pooling='avg'):
+def create_base_text_network_lstm(input_shape, input_shape_time_dist, pooling='max'):
 	kernel_size = (5,5)
 	embedding_size = 128
 	model = Sequential()
@@ -97,7 +97,7 @@ def compute_avg_distances(predictions, labels):
 	return same_avg, diff_avg 
 
 #main
-epochs = 120
+epochs = 50
 val_split = 0.1
 
 dataset = Dataset()
@@ -122,8 +122,8 @@ input_shape_text_time_distributed = (numb_words, word_emb)
 
 base_image_network = create_base_image_network(input_shape_img)
 base_text_network = create_base_text_network_lstm(input_shape_text, input_shape_text_time_distributed)
-plot_model(base_image_network, to_file='base_image_network_lstm_avg_cross_final.png', show_shapes=True, show_layer_names=True)
-plot_model(base_text_network, to_file='base_text_network_lstm_avg_cross_final.png', show_shapes=True, show_layer_names=True)
+plot_model(base_image_network, to_file='base_image_network_lstm_max_cross_final3.png', show_shapes=True, show_layer_names=True)
+plot_model(base_text_network, to_file='base_text_network_lstm_max_cross_final3.png', show_shapes=True, show_layer_names=True)
 
 #create_base_network(input_shape_conv, input_shape_time_dist)
 
@@ -137,7 +137,7 @@ distance = Lambda(euclidean_distance, output_shape=eucl_dist_output_shape)([proc
 sigmoid = Dense(1, activation='sigmoid')(distance)
 
 model = Model(input=[input_i, input_t], output=[distance, sigmoid])
-plot_model(model, to_file='full_model_lstm_avg_cross_final.png', show_shapes=True, show_layer_names=True)
+plot_model(model, to_file='full_model_lstm_max_cross_final3.png', show_shapes=True, show_layer_names=True)
 
 rms = RMSprop()
 model.compile(loss=[contrastive_loss, 'binary_crossentropy'], optimizer=rms)
@@ -160,4 +160,4 @@ print('Distance of negative pairs = ', diff_dist)
 print('Difference = ', diff_dist - same_dist)
 
 #Saving Model:
-save_keras_mode('distance_lstm_avg_cross_final', model)
+save_keras_mode('distance_lstm_max_cross_final3', model)
